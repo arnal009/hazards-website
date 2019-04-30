@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-import { Navbar, Nav } from 'react-bootstrap'
-import { Router, Location, navigate, Redirect } from '@reach/router'
-import ListViewComponent from './ListView/ListViewComponent'
-import MapViewComponent from './MapView/MapViewComponent'
-import HazardViewComponent from './HazardView/HazardViewComponent'
-import './App.css';
-import FourOhFourViewComponent from './404View/404ViewComponent';
+import React, { Component } from "react";
+import { Navbar, Nav } from "react-bootstrap";
+import { Router, Location, navigate, Redirect } from "@reach/router";
+import ListViewComponent from "./ListView/ListViewComponent";
+import MapViewComponent from "./MapView/MapViewComponent";
+import HazardViewComponent from "./HazardView/HazardViewComponent";
+import "./App.css";
+import FourOhFourViewComponent from "./404View/404ViewComponent";
 // HazardView team's npm modules
 import axios from "axios";
 
 class App extends Component {
-
   // default State object for entire app
   state = {
     volcanoes: [],
@@ -18,7 +17,6 @@ class App extends Component {
   };
 
   componentDidMount() {
-
     // fetching Volcanoes data
     axios
       .get("/api/volcanoes")
@@ -49,7 +47,10 @@ class App extends Component {
             last_updated: earthquake.last_updated,
             name: earthquake.name,
             link: `<url.com>/api/earthquakes/${earthquake.hazard_id}`,
-            coordinates: [earthquake.location.latitude, earthquake.location.longitude]
+            coordinates: [
+              earthquake.location.latitude,
+              earthquake.location.longitude
+            ]
           };
         });
 
@@ -60,7 +61,6 @@ class App extends Component {
       .catch(error => console.log(error));
   }
 
-
   render() {
     return (
       <div>
@@ -69,8 +69,12 @@ class App extends Component {
           <Navbar.Toggle />
           <Navbar.Collapse>
             <Location>
-              {({ location }) =>
-                <Nav variant="pills" activeKey={location.pathname} onSelect={selectedKey => navigate(selectedKey)}>
+              {({ location }) => (
+                <Nav
+                  variant="pills"
+                  activeKey={location.pathname}
+                  onSelect={selectedKey => navigate(selectedKey)}
+                >
                   <Nav.Item>
                     <Nav.Link eventKey="/list">List View</Nav.Link>
                   </Nav.Item>
@@ -78,14 +82,18 @@ class App extends Component {
                     <Nav.Link eventKey="/map">Map View</Nav.Link>
                   </Nav.Item>
                 </Nav>
-              }
+              )}
             </Location>
           </Navbar.Collapse>
         </Navbar>
         <Router>
           <Redirect from="/" to="/list" noThrow />
           <ListViewComponent path="/list" />
-          <MapViewComponent path="/map" volcanoes={this.state.volcanoes} earthquakes={this.state.earthquakes} />
+          <MapViewComponent
+            path="/map"
+            volcanoes={this.state.volcanoes}
+            earthquakes={this.state.earthquakes}
+          />
           <HazardViewComponent path="/hazard" />
           <FourOhFourViewComponent default />
         </Router>
