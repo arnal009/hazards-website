@@ -94,7 +94,7 @@ class App extends Component {
             volcanoes={this.state.volcanoes}
             earthquakes={this.state.earthquakes}
           />
-          <HazardViewComponent path="/hazard" />
+          <HazardViewComponent path="/hazard/:hazardId" />
           <FourOhFourViewComponent default />
         </Router>
       </div>

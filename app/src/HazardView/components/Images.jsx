@@ -29,11 +29,11 @@ class Images extends Component {
   }
 
   printThumbnail = element => (
-    <div class="col">
+    <div class="col col-sm-auto col-md-auto col-lg-auto" key={Math.random()}>
       <img
         src={element.compressed_image_url}
         class="img-thumbnail"
-        alt="geo backscatter"
+        alt="Image"
       />
     </div>
   );
@@ -56,7 +56,7 @@ class Images extends Component {
   };
 
   printRow = (satellite, type) => (
-    <div>
+    <div class="image-type-section" key={satellite + this.printName(type)}>
       <h3>{this.printName(type)}</h3>
       <div class="row">{satellite[type].map(this.printThumbnail)}</div>
     </div>
@@ -65,7 +65,7 @@ class Images extends Component {
   printRows = satellite => {
     var rtrn = [];
 
-    if (this.state.filter.BackScatter && this.state.filter.Georectified) {
+    if (this.state.filter.Backscatter && this.state.filter.Georectified) {
       rtrn.push(this.printRow(satellite, "geo_backscatter"));
     }
 
@@ -77,7 +77,7 @@ class Images extends Component {
       rtrn.push(this.printRow(satellite, "geo_coherence"));
     }
 
-    if (this.state.filter.BackScatter && this.state.filter.Orthorectified) {
+    if (this.state.filter.Backscatter && this.state.filter.Orthorectified) {
       rtrn.push(this.printRow(satellite, "ortho_backscatter"));
     }
 
@@ -92,12 +92,22 @@ class Images extends Component {
     return rtrn;
   };
 
-  createSatelliteSection = satellite => (
-    <div>
-      <h2>{satellite.constructor.name}</h2>
+  createSatelliteSection = (satName, satellite) => (
+    <div class="satellite-section" key={satName}>
+      <h2>{satName}</h2>
       {this.printRows(satellite)}
     </div>
   );
+
+  createSatelliteSections = () => {
+    var rtrn = [];
+    for (var satellite in this.state.imageData) {
+      rtrn.push(
+        this.createSatelliteSection(satellite, this.state.imageData[satellite])
+      );
+    }
+    return rtrn;
+  };
 
   render() {
     if (!this.state.imageData) {
@@ -105,7 +115,7 @@ class Images extends Component {
     }
     return (
       <div id="ImgBoundingBox" class="container-fluid main">
-        {this.createSatelliteSection(this.state.imageData.satellite_id0)}
+        {this.createSatelliteSections()}
       </div>
     );
   }
